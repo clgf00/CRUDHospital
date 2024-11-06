@@ -1,0 +1,5 @@
+#Mon Oct 21 17:45:21 CEST 2024
+doctorsFilePath=data/doctors.csv
+nextIdDoctor=6
+nextIdPatient=10
+patientsFilePath=data/patients.csv

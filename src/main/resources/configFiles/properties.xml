@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>XML file</comment>
+    <entry key="xmlMedRecordsPath">data/medRecord.xml</entry>
+    <entry key="patientsFilePath">data/patients.csv</entry>
+    <entry key="nextIdPatient">6</entry>
+    <entry key="nextIdDoctor">8</entry>
+    <entry key="doctorsFilePath">data/doctors.csv</entry>
+
+    <entry key="urlDB">jdbc:mysql://dam2.mysql.iesquevedo.es:3335/ClaudiaGalera_Hospital</entry>
+    <entry key="user_name">root</entry>
+    <entry key="password">quevedo2dam</entry>
+</properties>
