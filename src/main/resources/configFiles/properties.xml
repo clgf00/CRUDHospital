@@ -7,7 +7,7 @@
     <entry key="nextIdPatient">6</entry>
     <entry key="nextIdDoctor">8</entry>
     <entry key="doctorsFilePath">data/doctors.csv</entry>
-
+    <entry key="driver">com.mysql.cj.jdbc.Driver</entry>
     <entry key="urlDB">jdbc:mysql://dam2.mysql.iesquevedo.es:3335/ClaudiaGalera_Hospital</entry>
     <entry key="user_name">root</entry>
     <entry key="password">quevedo2dam</entry>

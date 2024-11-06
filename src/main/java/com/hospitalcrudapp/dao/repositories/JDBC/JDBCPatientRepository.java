@@ -17,13 +17,14 @@ import java.util.logging.Logger;
 @Profile("active")
 public class JDBCPatientRepository implements PatientRepository {
 
-    private final DBConnection dbConnection;
+    private final DBConnectionPool dbConnection;
 
-    public JDBCPatientRepository(DBConnection connection) {
+    public JDBCPatientRepository(DBConnectionPool connection) {
         this.dbConnection = connection;
     }
 
     public List<Patient> getAll() {
+        //todo: solucionar lo de que llame a toda la lista en vez de filtrarla. Es costoso llamarla toda de golpe
         List<Patient> patients = new ArrayList<>();
         try (Connection connection = dbConnection.getConnection();
              Statement statement = connection.createStatement()) {
@@ -53,8 +54,11 @@ public class JDBCPatientRepository implements PatientRepository {
         String insertPatientSQL = SQLQueries.INSERT_PATIENT;
         String insertUserLoginSQL = SQLQueries.INSERT_USER_LOGIN;
 
-        try (Connection con = dbConnection.getConnection()) {
+        Connection con = null;
+        try {
+            con = dbConnection.getConnection();
             con.setAutoCommit(false);
+
             try (PreparedStatement ps = con.prepareStatement(insertPatientSQL, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, patient.getName());
                 ps.setDate(2, java.sql.Date.valueOf(patient.getBirthDate()));
@@ -72,13 +76,28 @@ public class JDBCPatientRepository implements PatientRepository {
                         rowsAffected += userLoginPs.executeUpdate();
                     }
                 }
+
+                con.commit();
+            } catch (SQLException e) {
+                if (con != null) {
+                    con.rollback();
+                }
+                Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, "Error during insert", e);
+                rowsAffected = 0;
             }
-            con.commit();
         } catch (SQLException sqle) {
-            //todo añadir rollback
-            //todo añadir finally
-            Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, sqle);
+            Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, "Connection error", sqle);
+            rowsAffected = 0;
+        } finally {
+            try {
+                if (con != null && !con.isClosed()) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.WARNING, "Error closing connection", e);
+            }
         }
+
         return rowsAffected;
     }
     @Override
@@ -124,21 +143,5 @@ public class JDBCPatientRepository implements PatientRepository {
             Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return rowsAffected;
-    }
-    public double getTotalPayments(int patientId) {
-        double totalPayments = 0.0;
-        try (Connection con = dbConnection.getConnection();
-             PreparedStatement pstmt = con.prepareStatement(SQLQueries.TOTAL_PAYMENTS_QUERY)) {
-
-            pstmt.setInt(1, patientId);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                totalPayments = rs.getDouble(1);
-            }
-        } catch (SQLException sqle) {
-            Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, sqle);
-        }
-        return totalPayments;
     }
 }
