@@ -5,6 +5,7 @@ import lombok.*;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,6 +35,6 @@ public class MedRecord {
     private LocalDate date;
     @XmlElementWrapper(name = "medications")
     @XmlElement(name = "medication")
-    private List<Medication> medications;
+    private List<Medication> medications = new ArrayList<>();
 }
 

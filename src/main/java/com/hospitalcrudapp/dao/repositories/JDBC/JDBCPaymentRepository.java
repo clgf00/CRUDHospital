@@ -13,9 +13,7 @@ import java.util.logging.Logger;
 @Repository
 @Profile("active")
 public class JDBCPaymentRepository {
-
     private final DBConnectionPool dbConnection;
-
 
     public JDBCPaymentRepository(DBConnectionPool dbConnection) {
         this.dbConnection = dbConnection;

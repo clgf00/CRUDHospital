@@ -2,6 +2,7 @@ package com.hospitalcrudapp.domain.services;
 import com.hospitalcrudapp.dao.model.MedRecord;
 import com.hospitalcrudapp.dao.model.Medication;
 import com.hospitalcrudapp.dao.repositories.Files.XmlMedRecordRepository;
+import com.hospitalcrudapp.dao.repositories.JDBC.JDBCMedRecordRepository;
 import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPatientRepository;
 import com.hospitalcrudapp.dao.repositories.MedRecordRepository;
 import com.hospitalcrudapp.dao.repositories.MedicationRepository;
@@ -18,14 +19,14 @@ import java.util.List;
 @Setter
 @Service
 public class MedRecordService {
-   private final MedRecordRepository medRecordRepository;
+   private final JDBCMedRecordRepository medRecordRepository;
 
-    public MedRecordService(MedRecordRepository medRecordRepository) {
+    public MedRecordService(JDBCMedRecordRepository medRecordRepository) {
         this.medRecordRepository = medRecordRepository;
     }
 
 
-    public List<MedRecordUi> getAll(int idPatient) throws Exception {
+    public List<MedRecordUi> getAll(int idPatient){
         List<MedRecord> medRecords = medRecordRepository.getAll(idPatient).stream().filter(record -> record.getIdPatient() == idPatient).toList();
         List<MedRecordUi> medRecordUi = new ArrayList<>();
         for (MedRecord medRecord : medRecords) {

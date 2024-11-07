@@ -1,6 +1,5 @@
 package com.hospitalcrudapp.dao.repositories.JDBC;
 
-import com.hospitalcrudapp.dao.model.Credential;
 import com.hospitalcrudapp.dao.model.Patient;
 import com.hospitalcrudapp.dao.repositories.PatientRepository;
 import org.springframework.context.annotation.Profile;
@@ -16,7 +15,6 @@ import java.util.logging.Logger;
 @Repository
 @Profile("active")
 public class JDBCPatientRepository implements PatientRepository {
-
     private final DBConnectionPool dbConnection;
 
     public JDBCPatientRepository(DBConnectionPool connection) {
@@ -28,15 +26,14 @@ public class JDBCPatientRepository implements PatientRepository {
         List<Patient> patients = new ArrayList<>();
         try (Connection connection = dbConnection.getConnection();
              Statement statement = connection.createStatement()) {
-
             ResultSet rs = statement.executeQuery(SQLQueries.SELECT_PATIENTS_QUERY);
+
 
             while (rs.next()) {
                 int id = rs.getInt("patient_id");
                 String name = rs.getString("name");
                 LocalDate birthDate = rs.getDate("date_of_birth").toLocalDate();
                 String phoneNumber = rs.getString("phone");
-
 
                 //TODO HACER EN EL MAPPER
                 Patient patient = new Patient(id, name, birthDate, phoneNumber, null);
