@@ -22,7 +22,6 @@ public class JDBCPatientRepository implements PatientRepository {
     }
 
     public List<Patient> getAll() {
-        //todo: solucionar lo de que llame a toda la lista en vez de filtrarla. Es costoso llamarla toda de golpe
         List<Patient> patients = new ArrayList<>();
         try (Connection connection = dbConnection.getConnection();
              Statement statement = connection.createStatement()) {

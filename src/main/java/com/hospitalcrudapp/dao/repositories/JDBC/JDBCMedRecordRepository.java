@@ -4,7 +4,6 @@ import com.hospitalcrudapp.dao.model.MedRecord;
 import com.hospitalcrudapp.dao.repositories.MedRecordRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +31,14 @@ public class JDBCMedRecordRepository implements MedRecordRepository {
             ps.setInt(1, idPatient);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    MedRecord record = new MedRecord();
-                    record.setId(rs.getInt("record_id"));
-                    record.setIdPatient(rs.getInt("patient_id"));
-                    record.setIdDoctor(Integer.parseInt(rs.getString("doctor_id")));
-                    record.setDescription(rs.getString("diagnosis"));
-                    record.setDate(rs.getDate("admission_date").toLocalDate());
+                    MedRecord medRecord = new MedRecord();
+                    medRecord.setId(rs.getInt("record_id"));
+                    medRecord.setIdPatient(rs.getInt("patient_id"));
+                    medRecord.setIdDoctor(Integer.parseInt(rs.getString("doctor_id")));
+                    medRecord.setDescription(rs.getString("diagnosis"));
+                    medRecord.setDate(rs.getDate("admission_date").toLocalDate());
 
-                    medicalRecords.add(record);
+                    medicalRecords.add(medRecord);
                 }
             }
 
