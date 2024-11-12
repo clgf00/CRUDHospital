@@ -8,27 +8,26 @@ public class SQLQueries {
 
     public static final String SELECT_MEDICAL_RECORDS_BY_PATIENT_ID =
             "SELECT record_id, patient_id, doctor_id, diagnosis, admission_date FROM medical_records WHERE patient_id = ?";
-
     public static final String INSERT_INTO_MED_RECORDS = "INSERT INTO medical_records (patient_id, doctor_id, diagnosis, admission_date) VALUES (?, ?, ?, ?)";
-
     public static final String UPDATE_TOTAL_PATIENT = "UPDATE patients SET name = ?, date_of_birth = ?, phone = ? WHERE patient_id = ?";
-
     public static final String INSERT_PATIENT = "INSERT INTO patients (name, date_of_birth, phone) VALUES (?, ?, ?)";
-
     public static final String INSERT_PATIENT_WITH_AUTOINCREMENTAL_ID = "INSERT INTO patients (patient_id, name, date_of_birth, phone) VALUES (?, ?, ?, ?)";
-
     public static final String DELETE_PATIENT = "DELETE FROM patients WHERE patient_id = ?";
-
     public static final String DELETE_PATIENT_MEDICAL_RECORDS = "DELETE FROM medical_records WHERE patient_id = ?";
-
     public static final String TOTAL_PAYMENTS_QUERY = "SELECT SUM(amount) FROM patient_payments WHERE patient_id = ? GROUP BY patient_id";
-
     public static final String INSERT_USER_LOGIN = "INSERT INTO user_login (username, password, patient_id) VALUES (?, ?, ?)";
-
     public static final String DELETE_USER_LOGIN = "DELETE FROM user_login WHERE patient_id = ?";
-
     public static final String DELETE_MED_RECORD = "DELETE FROM medical_records WHERE record_id = ?";
-
     public static final String UPDATE_MED_RECORD = "UPDATE medical_records SET doctor_id = ?, diagnosis = ?, admission_date = ? WHERE record_id = ?";
+    public static final String INSERT_INTO_PRESCRIBED_MEDICATIONS =
+            "INSERT INTO prescribed_medications (record_id, medication_name) VALUES (?, ?)";
+    public static final String DELETE_MEDICATIONS = "DELETE FROM prescribed_medications WHERE record_id = ?";
+    public static final String SELECT_MEDICATIONS_BY_RECORD_ID =
+            "SELECT medication_name FROM prescribed_medications WHERE record_id = ?";
+    public static final String GET_MEDS = "SELECT prescription_id, record_id, medication_name, dosage FROM prescribed_medications";
+    public static final String SELECT_DOCTORS_QUERY = "SELECT doctor_id, name, specialization FROM doctors";
+
+
 
 }
+

@@ -16,7 +16,7 @@
     import java.util.List;
     
     @Repository
-    @Profile("active")
+    @Profile("null")
     public class TxtDoctorRepository implements DoctorRepository {
         private final DoctorRowMapper doctorRowMapper;
         private List<Doctor> doctors;
@@ -64,51 +64,5 @@
                 }
             }
             return doctors;
-        }
-    
-        @Override
-        public int add(Doctor doctor) {
-            int newId = Integer.parseInt(Configuration.getInstance().getProperty("nextId"));
-            Configuration.getInstance().setProperty("nextId", String.valueOf(newId + 1));
-            Path file = Paths.get(Configuration.getInstance().getProperty("doctorsFilePath"));
-            try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.APPEND)) {
-                writeDoctorsToFile(doctors, writer);
-            } catch (IOException e) {
-                return 0;
-            }
-            return newId;
-        }
-    
-        @Override
-        public void update(Doctor doctor) {
-            List<Doctor> lista = getAll();
-            for (int i = 0; i < lista.size(); i++) {
-                if (lista.get(i).getId() == doctor.getId()) {
-                    lista.set(i, doctor);
-                    break;
-                }
-            }
-            Path file = Paths.get(Configuration.getInstance().getProperty("doctorsFilePath"));
-            try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                try {
-                    writeDoctorsToFile(lista, writer);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    
-        @Override
-        public void delete(int id) {
-            List<Doctor> doctorList = getAll();
-            doctorList.removeIf(doctor -> doctor.getId() == id);
-            Path file = Paths.get(Configuration.getInstance().getProperty("doctorsFilePath"));
-            try (BufferedWriter writer = Files.newBufferedWriter(file, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                writeDoctorsToFile(doctorList, writer);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }

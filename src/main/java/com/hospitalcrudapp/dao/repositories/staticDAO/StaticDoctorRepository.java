@@ -19,19 +19,4 @@ public class StaticDoctorRepository implements DoctorRepository {
 
         return doctors;
     }
-
-    @Override
-    public int add(Doctor doctor) {
-        return 0;
-    }
-
-    @Override
-    public void update(Doctor doctor)  {
-
-    }
-
-    @Override
-    public void delete(int id) {
-
-    }
 }
