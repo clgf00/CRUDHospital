@@ -1,15 +1,16 @@
 package com.hospitalcrudapp.domain.services;
 import com.hospitalcrudapp.dao.model.Credential;
 import com.hospitalcrudapp.dao.repositories.CredentialRepository;
+import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringCredentialRepository;
 import com.hospitalcrudapp.domain.model.CredentialUi;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 @Service
 public class CredentialService {
-    private final CredentialRepository credentialRepository;
+    private final SpringCredentialRepository credentialRepository;
 
-    public CredentialService(CredentialRepository credentialRepository) {
+    public CredentialService(SpringCredentialRepository credentialRepository) {
         this.credentialRepository = credentialRepository;
     }
     public boolean get(CredentialUi credentialui) {
@@ -25,9 +26,10 @@ public class CredentialService {
 
 
     public boolean login(Credential credential) {
-        List<Credential> credentials = credentialRepository.getAll();
-        if(credentials.contains(credential)) {
+        Credential storedCredential = credentialRepository.get(credential.getUsername());
+        if (storedCredential != null && Objects.equals(storedCredential.getPassword(), credential.getPassword())) {
             return true;
-        }else return false;
+        }
+        return false;
     }
 }

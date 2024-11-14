@@ -21,16 +21,17 @@ public class SpringCredentialRepository implements CredentialRepository {
         this.credentialRowMapper = credentialRowMapper;
     }
 
+
     @Override
-    public Credential get(String username) {
-        return jdbcClient.sql("select * from user_login where username = ?")
+    public Credential get(String username){
+              return jdbcClient.sql("select * from user_login where username = ?")
                 .param(1, username)
                 .query(credentialRowMapper)
                 .single();
     }
 
     @Override
-    public List<Credential> getAll() {
-        return List.of();
+    public void add(Credential credential) {
+
     }
 }

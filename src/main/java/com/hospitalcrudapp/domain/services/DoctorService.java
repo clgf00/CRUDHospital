@@ -1,6 +1,6 @@
 package com.hospitalcrudapp.domain.services;
 import com.hospitalcrudapp.dao.model.Doctor;
-import com.hospitalcrudapp.dao.repositories.JDBC.JDBCDoctorRepository;
+import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringDoctorRepository;
 import com.hospitalcrudapp.domain.model.DoctorUi;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 public class DoctorService {
-    private final JDBCDoctorRepository doctorRepository;
+    private final SpringDoctorRepository doctorRepository;
 
-    public DoctorService(JDBCDoctorRepository doctorRepository) {
+    public DoctorService(SpringDoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
         
     }

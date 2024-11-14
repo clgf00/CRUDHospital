@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Repository
 @Profile("null")
-public class StaticMedRecordRepository implements MedRecordRepository {
+public  class StaticMedRecordRepository implements MedRecordRepository {
     private final List<MedRecord> medRecords = new ArrayList<>();
     private final List<Medication> medications = new ArrayList<>();
     private final List<Medication> meds = new ArrayList<>();

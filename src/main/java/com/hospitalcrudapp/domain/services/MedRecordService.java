@@ -7,6 +7,7 @@ import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPatientRepository;
 import com.hospitalcrudapp.dao.repositories.MedRecordRepository;
 import com.hospitalcrudapp.dao.repositories.MedicationRepository;
 import com.hospitalcrudapp.dao.repositories.Files.TxtPatientRepository;
+import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringMedRecordRepository;
 import com.hospitalcrudapp.domain.model.MedRecordUi;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +20,9 @@ import java.util.List;
 @Setter
 @Service
 public class MedRecordService {
-   private final JDBCMedRecordRepository medRecordRepository;
+   private final SpringMedRecordRepository medRecordRepository;
 
-    public MedRecordService(JDBCMedRecordRepository medRecordRepository) {
+    public MedRecordService(SpringMedRecordRepository medRecordRepository) {
         this.medRecordRepository = medRecordRepository;
     }
 

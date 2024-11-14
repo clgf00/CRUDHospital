@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 @Repository
-@Profile("active")
+@Profile("null")
 public class StaticCredentialRepository implements CredentialRepository {
     public List<Credential> getAll() {
         List<Credential> credentials = new ArrayList<>();
@@ -19,5 +19,10 @@ public class StaticCredentialRepository implements CredentialRepository {
 
     public Credential get(String username) {
         return new Credential("root", "root", 1);
+    }
+
+    @Override
+    public void add(Credential credential) {
+
     }
 }
