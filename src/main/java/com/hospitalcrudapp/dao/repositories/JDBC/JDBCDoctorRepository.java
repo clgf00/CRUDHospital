@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import static org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties.UiService.LOGGER;
-
 @Repository
 @Profile("active")
 public class JDBCDoctorRepository implements DoctorRepository {
@@ -33,7 +31,7 @@ public class JDBCDoctorRepository implements DoctorRepository {
 
             while (rs.next()) {
                 Doctor doctor = Doctor.builder()
-                        .id(rs.getInt("doctor_id"))
+                        .doctor_id(rs.getInt("doctor_id"))
                         .name(rs.getString("name"))
                         .specialty(rs.getString("specialization"))
                         .build();

@@ -57,20 +57,5 @@ public class PatientRowMapper implements RowMapper<Patient> {
             return false;
         }
     }
-    public List<Patient> mapRowList(ResultSet rs) {
-        List<Patient> patientList = new ArrayList<>();
-        try {
-            int rowNum = 0;
-            while (rs.next()) {
-                Patient patient = mapRow(rs, rowNum);
-                if (patient != null) {
-                    patientList.add(patient);
-                }
-            }
-            return patientList;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 

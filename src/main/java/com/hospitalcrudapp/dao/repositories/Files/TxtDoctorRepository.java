@@ -11,7 +11,6 @@
     import java.nio.file.Files;
     import java.nio.file.Path;
     import java.nio.file.Paths;
-    import java.nio.file.StandardOpenOption;
     import java.util.ArrayList;
     import java.util.List;
     
@@ -31,7 +30,7 @@
                 String doctorData = String.format("%d; %s; %s%n",
                         //%d se refiere a un numero entero, %s se refiere a string y %n es salto de linea
                         // de modo que quedará así: newId; nombre; especialidad
-                        p.getId(),
+                        p.getDoctor_id(),
                         p.getName(),
                         p.getSpecialty());
     

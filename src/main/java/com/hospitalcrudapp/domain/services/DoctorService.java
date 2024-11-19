@@ -22,7 +22,7 @@ public class DoctorService {
         List<Doctor> doctors = doctorRepository.getAll();
         List<DoctorUi> doctorUi = new ArrayList<>();
         doctors.forEach(doctor ->
-                doctorUi.add(new DoctorUi(doctor.getId(), doctor.getName())));
+                doctorUi.add(new DoctorUi(doctor.getDoctor_id(), doctor.getName())));
         return doctorUi;
     }
 }

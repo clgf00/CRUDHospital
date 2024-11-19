@@ -28,7 +28,6 @@ public class SpringPatientRepository implements PatientRepository {
         this.credentialRepository = credentialRepository;
     }
 
-
     @Override
     public List<Patient> getAll() {
         return jdbcClient.sql("select * from patients")

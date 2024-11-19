@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Doctor {
-    private int id;
+    private int doctor_id;
     private String name;
     private String specialty;
 }
