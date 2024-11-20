@@ -4,6 +4,7 @@ import com.hospitalcrudapp.dao.model.Patient;
 import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPatientRepository;
 import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPaymentRepository;
 import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringPatientRepository;
+import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringPaymentRepository;
 import com.hospitalcrudapp.domain.model.PatientUi;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.List;
 public class PatientService {
 
     private final SpringPatientRepository patientRepository;
-    private final JDBCPaymentRepository paymentRepository;
-    public PatientService(SpringPatientRepository patientRepository, JDBCPaymentRepository paymentRepository) {
+    private final SpringPaymentRepository paymentRepository;
+    public PatientService(SpringPatientRepository patientRepository, SpringPaymentRepository paymentRepository) {
         this.patientRepository = patientRepository;
         this.paymentRepository = paymentRepository;
     }

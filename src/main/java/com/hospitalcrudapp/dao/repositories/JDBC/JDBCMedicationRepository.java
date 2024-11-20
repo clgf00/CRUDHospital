@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-@Profile("active")
+@Profile("null")
 public class JDBCMedicationRepository implements MedicationRepository {
 
     private final DBConnectionPool dbConnection;

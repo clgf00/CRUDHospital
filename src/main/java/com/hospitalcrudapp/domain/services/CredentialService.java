@@ -1,10 +1,8 @@
 package com.hospitalcrudapp.domain.services;
 import com.hospitalcrudapp.dao.model.Credential;
-import com.hospitalcrudapp.dao.repositories.CredentialRepository;
 import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringCredentialRepository;
 import com.hospitalcrudapp.domain.model.CredentialUi;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Objects;
 @Service
 public class CredentialService {

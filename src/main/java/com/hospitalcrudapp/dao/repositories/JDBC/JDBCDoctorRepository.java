@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 @Repository
-@Profile("active")
+@Profile("null")
 public class JDBCDoctorRepository implements DoctorRepository {
 
     private final DBConnectionPool dbConnection;

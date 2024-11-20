@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
-@Profile("active")
+@Profile("null")
 public class JDBCPatientRepository implements PatientRepository {
     private final DBConnectionPool dbConnection;
 
@@ -47,7 +47,7 @@ public class JDBCPatientRepository implements PatientRepository {
     @Override
     public int add(Patient patient) {
         int rowsAffected = 0;
-        String insertPatientSQL = SQLQueries.INSERT_PATIENT;
+        String insertPatientSQL = SQLQueries.ADD_PATIENT;
         String insertUserLoginSQL = SQLQueries.INSERT_USER_LOGIN;
 
         Connection con = null;

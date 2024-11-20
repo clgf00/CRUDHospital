@@ -5,6 +5,7 @@ import com.hospitalcrudapp.dao.mappers.MedRecordRowMapper;
 import com.hospitalcrudapp.dao.mappers.MedicationRowMapper;
 import com.hospitalcrudapp.dao.model.MedRecord;
 import com.hospitalcrudapp.dao.model.Medication;
+import com.hospitalcrudapp.dao.repositories.JDBC.SQLQueries;
 import com.hospitalcrudapp.dao.repositories.MedRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -29,12 +30,12 @@ public class SpringMedRecordRepository implements MedRecordRepository {
 
     @Override
     public List<MedRecord> getAll(int idPatient) {
-        List<MedRecord> records = jdbcClient.sql("SELECT record_id, patient_id, doctor_id, diagnosis, admission_date FROM medical_records WHERE patient_id = ?")
+        List<MedRecord> records = jdbcClient.sql(SQLQueries.GET_MEDRECORDS)
                 .param(1, idPatient)
                 .query(medRecordRowMapper)
                 .list();
         for (MedRecord medRecord : records) {
-            List<Medication> medications = jdbcClient.sql("SELECT prescription_id, medication_name, record_id FROM prescribed_medications WHERE record_id = ?")
+            List<Medication> medications = jdbcClient.sql(SQLQueries.GET_MEDICATIONS)
                     .param(1, medRecord.getId())
                     .query(medicationRowMapper)
                     .list();
@@ -48,7 +49,7 @@ public class SpringMedRecordRepository implements MedRecordRepository {
 
     @Override
     public int update(MedRecord medRecord) {
-        int updatedMedicalRecords = jdbcClient.sql("UPDATE medical_records SET doctor_id = ?, diagnosis = ?, admission_date = ? WHERE record_id = ?")
+        int updatedMedicalRecords = jdbcClient.sql(SQLQueries.UPDATE_MEDRECORD)
                 .param(1, medRecord.getIdDoctor())
                 .param(2, medRecord.getDescription())
                 .param(3, medRecord.getDate())
@@ -59,20 +60,20 @@ public class SpringMedRecordRepository implements MedRecordRepository {
                 .map(medication -> String.valueOf(medication.getId()))
                 .collect(Collectors.joining(","));
 
-        jdbcClient.sql("DELETE FROM prescribed_medications WHERE record_id = ? AND prescription_id NOT IN (" + prescriptionIds + ")")
+        jdbcClient.sql(SQLQueries.DELETE_MEDICATIONS)
                 .param(1, medRecord.getId())
                 .update();
 
         int updatedMedications = 0;
         for (Medication medication : medRecord.getMedications()) {
-            int rowsAffected = jdbcClient.sql("UPDATE prescribed_medications SET medication_name = ? WHERE record_id = ? AND prescription_id = ?")
+            int rowsAffected = jdbcClient.sql(SQLQueries.UPDATE_MEDICATIONS)
                     .param(1, medication.getMedicationName())
                     .param(2, medRecord.getId())
                     .param(3, medication.getId())
                     .update();
 
             if (rowsAffected == 0) {
-                updatedMedications += jdbcClient.sql("INSERT INTO prescribed_medications (record_id, medication_name) VALUES (?, ?)")
+                updatedMedications += jdbcClient.sql(SQLQueries.ADD_MEDICATIONS)
                         .param(1, medRecord.getId())
                         .param(2, medication.getMedicationName())
                         .update();
@@ -88,11 +89,11 @@ public class SpringMedRecordRepository implements MedRecordRepository {
     @Override
     public void delete(int id) {
 
-        jdbcClient.sql("DELETE FROM prescribed_medications WHERE record_id = ?")
+        jdbcClient.sql(SQLQueries.DELETE_MEDICATIONS)
                 .param(1, id)
                 .update();
 
-        jdbcClient.sql("DELETE FROM medical_records WHERE record_id = ?")
+        jdbcClient.sql(SQLQueries.DELETE_MED_RECORD)
                 .param(1, id)
                 .update();
 

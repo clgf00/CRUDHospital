@@ -2,6 +2,7 @@ package com.hospitalcrudapp.dao.repositories.SpringJDBC;
 
 import com.hospitalcrudapp.dao.model.Doctor;
 import com.hospitalcrudapp.dao.repositories.DoctorRepository;
+import com.hospitalcrudapp.dao.repositories.JDBC.SQLQueries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -17,7 +18,7 @@ public class SpringDoctorRepository implements DoctorRepository {
 
     @Override
     public List<Doctor> getAll() {
-        return jdbcClient.sql("select * from doctors")
+        return jdbcClient.sql(SQLQueries.GET_DOCTORS)
                 .query(Doctor.class)
                 .list();
     }

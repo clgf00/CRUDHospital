@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 @Component
 public class DBConnectionPool {
-    // tienes las consultas mas preparadas ya y va mas rapido. Usar esto en lugar de dbconnection
+    // tiene las consultas mas preparadas ya y va mas rapido. Usar esto en lugar de dbconnection
     private Configuration config;
     private DataSource hikariDataSource;
 
@@ -58,5 +58,4 @@ public class DBConnectionPool {
     public void closePool() {
         ((HikariDataSource) hikariDataSource).close();
     }
-
 }
