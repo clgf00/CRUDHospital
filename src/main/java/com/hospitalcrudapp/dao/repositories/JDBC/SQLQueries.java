@@ -34,10 +34,15 @@ public class SQLQueries {
     public static final String ADD_MEDICATIONS = "INSERT INTO prescribed_medications (record_id, medication_name) VALUES (?, ?)";
     public static final String UPDATE_PATIENT = "UPDATE patients SET name = ?, date_of_birth = ?, phone = ? WHERE patient_id = ?";
     public static final String GET_PATIENTS = "select * from patients";
-    public static final String DELETE_MEDS_PATIENTS = "DELETE FROM prescribed_medications WHERE record_id IN (SELECT record_id FROM medical_records WHERE patient_id = ?)";
-    public static final String DELETE_MEDREC_PATIENTS = "DELETE FROM medical_records WHERE patient_id = ?";
     public static final String DELETE_CREDENTIALS_PATIENT = "delete from user_login where patient_id = ?";
     public static final String SUM_PAYMENTS = "SELECT SUM(amount) FROM patient_payments WHERE patient_id = ?";
+    public static final String DELETE_PAYMENTS = "DELETE FROM patient_payments WHERE patient_id = ?";
+    public static final String DELETE_APPOINTMENTS = "DELETE FROM appointments WHERE patient_id = ?";
+    public static final String DELETE_MEDR = "DELETE FROM medical_records WHERE patient_id = ?";
+    public static final String DELETE_MEDS = "DELETE pm FROM prescribed_medications pm JOIN medical_records mr ON pm.record_id = mr.record_id WHERE mr.patient_id=?";
+
+
+
 
 }
 

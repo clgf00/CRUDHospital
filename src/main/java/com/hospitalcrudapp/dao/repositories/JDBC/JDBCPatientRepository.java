@@ -1,8 +1,12 @@
 package com.hospitalcrudapp.dao.repositories.JDBC;
 
 import com.hospitalcrudapp.dao.model.Patient;
+import com.hospitalcrudapp.dao.model.errors.DuplicatedUserError;
+import com.hospitalcrudapp.dao.model.errors.ForeignKeyConstraintError;
 import com.hospitalcrudapp.dao.repositories.PatientRepository;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -34,7 +38,6 @@ public class JDBCPatientRepository implements PatientRepository {
                 LocalDate birthDate = rs.getDate("date_of_birth").toLocalDate();
                 String phoneNumber = rs.getString("phone");
 
-                //TODO HACER EN EL MAPPER
                 Patient patient = new Patient(id, name, birthDate, phoneNumber, null);
                 patients.add(patient);
             }
@@ -96,6 +99,7 @@ public class JDBCPatientRepository implements PatientRepository {
 
         return rowsAffected;
     }
+
     @Override
     public void update(Patient patient) {
         try (Connection con = dbConnection.getConnection();
@@ -115,29 +119,54 @@ public class JDBCPatientRepository implements PatientRepository {
     public int delete(int id, boolean confirm) {
         int rowsAffected = 0;
         Connection con = null;
-
         try {
             con = dbConnection.getConnection();
             con.setAutoCommit(false);
-            //TODO dejar todo en un solo try catch
-            try (PreparedStatement deleteUserLogin = con.prepareStatement(SQLQueries.DELETE_USER_LOGIN);
-                 PreparedStatement deletePatient = con.prepareStatement(SQLQueries.DELETE_PATIENT)) {
 
-                deleteUserLogin.setInt(1, id);
-                deleteUserLogin.executeUpdate();
+            if (!confirm) {
+                try (PreparedStatement deletePatient = con.prepareStatement(SQLQueries.DELETE_PATIENT)) {
+                    deletePatient.setInt(1, id);
+                    rowsAffected = deletePatient.executeUpdate();
+                    con.commit();
+                } catch (SQLIntegrityConstraintViolationException e) {
+                    con.rollback();
+                    Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, e);
+                    throw new ForeignKeyConstraintError(e.getMessage());
+                }
+            } else {
+                try (PreparedStatement deleteUserLogin = con.prepareStatement(SQLQueries.DELETE_USER_LOGIN);
+                     PreparedStatement deletePatient = con.prepareStatement(SQLQueries.DELETE_PATIENT);
+                     PreparedStatement deletePayment = con.prepareStatement(SQLQueries.DELETE_PAYMENTS);
+                     PreparedStatement deleteAppointment = con.prepareStatement(SQLQueries.DELETE_APPOINTMENTS);
+                     PreparedStatement deleteMedRecords = con.prepareStatement(SQLQueries.DELETE_MEDR);
+                     PreparedStatement deleteMeds = con.prepareStatement(SQLQueries.DELETE_MEDS)) {
 
+                    deleteUserLogin.setInt(1, id);
+                    deletePayment.setInt(1, id);
+                    deleteMedRecords.setInt(1, id);
+                    deleteAppointment.setInt(1, id);
+                    deletePatient.setInt(1, id);
+                    deleteMeds.setInt(1, id);
 
-                deletePatient.setInt(1, id);
-                rowsAffected = deletePatient.executeUpdate();
+                    deleteUserLogin.executeUpdate();
+                    deletePayment.executeUpdate();
+                    deleteAppointment.executeUpdate();
+                    deleteMeds.executeUpdate();
+                    deleteMedRecords.executeUpdate();
 
-                con.commit();
-            } catch (SQLException e) {
-                con.rollback();
-                Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, e);
+                    rowsAffected = deletePatient.executeUpdate();
+
+                    con.commit();
+                } catch (SQLIntegrityConstraintViolationException e) {
+                    con.rollback();
+                    Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, e);
+                    throw new ForeignKeyConstraintError(e.getMessage());
+                }
             }
         } catch (SQLException sqle) {
             Logger.getLogger(JDBCPatientRepository.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return rowsAffected;
     }
+
 }
