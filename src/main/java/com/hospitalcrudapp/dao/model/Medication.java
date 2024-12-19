@@ -1,15 +1,15 @@
 package com.hospitalcrudapp.dao.model;
+
 import lombok.*;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@XmlRootElement(name="medRecord")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Medication {
     @XmlTransient
     private int id;

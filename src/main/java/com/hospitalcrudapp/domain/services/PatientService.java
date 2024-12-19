@@ -2,39 +2,33 @@ package com.hospitalcrudapp.domain.services;
 
 import com.hospitalcrudapp.dao.model.Credential;
 import com.hospitalcrudapp.dao.model.Patient;
-import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPatientRepository;
-import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringPatientRepository;
-import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringPaymentRepository;
+import com.hospitalcrudapp.dao.repositories.JPA.JPAPatientRepository;
 import com.hospitalcrudapp.domain.model.PatientUi;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class PatientService {
 
-    private final SpringPatientRepository patientRepository;
-    private final SpringPaymentRepository paymentRepository;
-    public PatientService(SpringPatientRepository patientRepository, SpringPaymentRepository paymentRepository) {
+    private final JPAPatientRepository patientRepository;
+
+    public PatientService(JPAPatientRepository patientRepository) {
         this.patientRepository = patientRepository;
-        this.paymentRepository = paymentRepository;
     }
 
     public List<PatientUi> getPatients() {
         List<Patient> patients = patientRepository.getAll();
         List<PatientUi> patientui = new ArrayList<>();
-        patients.forEach(patient -> {
-            double totalPayments = paymentRepository.getTotalPayments(patient.getId());
-            patientui.add(new PatientUi(
-                    patient.getId(),
-                    patient.getName(),
-                    patient.getBirthDate(),
-                    patient.getPhoneNumber(),
-                    null,
-                    null,
-                    totalPayments));
-        });
-
+        patients.forEach(patient -> patientui.add(new PatientUi(
+                patient.getId(),
+                patient.getName(),
+                patient.getBirthDate(),
+                patient.getPhoneNumber(),
+                null,
+                null,
+                0)));
         return patientui;
     }
 
@@ -50,6 +44,6 @@ public class PatientService {
     }
 
     public void deletePatient(int id, boolean confirm) {
-            patientRepository.delete(id, confirm);
-        }
+        patientRepository.delete(id, confirm);
+    }
 }

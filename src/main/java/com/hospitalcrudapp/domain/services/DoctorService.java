@@ -1,23 +1,21 @@
 package com.hospitalcrudapp.domain.services;
+
 import com.hospitalcrudapp.dao.model.Doctor;
-import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringDoctorRepository;
+import com.hospitalcrudapp.dao.repositories.JPA.JPADoctorRepository;
 import com.hospitalcrudapp.domain.model.DoctorUi;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
-@Getter
-@Setter
 public class DoctorService {
-    private final SpringDoctorRepository doctorRepository;
+    private final JPADoctorRepository doctorRepository;
 
-    public DoctorService(SpringDoctorRepository doctorRepository) {
+    public DoctorService(JPADoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
-        
-    }
 
+    }
     public List<DoctorUi> findAll() {
         List<Doctor> doctors = doctorRepository.getAll();
         List<DoctorUi> doctorUi = new ArrayList<>();
@@ -26,5 +24,3 @@ public class DoctorService {
         return doctorUi;
     }
 }
-
-
