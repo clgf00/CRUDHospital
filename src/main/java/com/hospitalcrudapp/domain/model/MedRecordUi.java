@@ -1,12 +1,16 @@
 package com.hospitalcrudapp.domain.model;
+
 import lombok.*;
+
 import java.time.LocalDate;
 import java.util.List;
-@Getter
-@Setter
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
+@Data
 public class MedRecordUi {
 
     private int id;

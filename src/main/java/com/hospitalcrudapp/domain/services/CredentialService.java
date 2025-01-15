@@ -1,33 +1,27 @@
 package com.hospitalcrudapp.domain.services;
+
 import com.hospitalcrudapp.dao.model.Credential;
-import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringCredentialRepository;
+import com.hospitalcrudapp.dao.repositories.JPA.JPACredentialRepository;
 import com.hospitalcrudapp.domain.model.CredentialUi;
 import org.springframework.stereotype.Service;
 import java.util.Objects;
+
 @Service
 public class CredentialService {
-    private final SpringCredentialRepository credentialRepository;
+    private final JPACredentialRepository credentialRepository;
 
-    public CredentialService(SpringCredentialRepository credentialRepository) {
+    public CredentialService(JPACredentialRepository credentialRepository) {
         this.credentialRepository = credentialRepository;
     }
     public boolean get(CredentialUi credentialui) {
-
-        Credential credentialRepository= this.credentialRepository.get(credentialui.getUsername());
-
+        Credential credential= this.credentialRepository.get(credentialui.getUsername());
         boolean aux;
-        if (Objects.equals(credentialRepository.getPassword(), credentialui.getPassword())) {
-            aux = true;
-        } else aux = false;
+        aux = Objects.equals(credential.getPassword(), credentialui.getPassword());
         return aux;
     }
 
-
     public boolean login(Credential credential) {
         Credential storedCredential = credentialRepository.get(credential.getUsername());
-        if (storedCredential != null && Objects.equals(storedCredential.getPassword(), credential.getPassword())) {
-            return true;
-        }
-        return false;
+        return storedCredential != null && Objects.equals(storedCredential.getPassword(), credential.getPassword());
     }
 }

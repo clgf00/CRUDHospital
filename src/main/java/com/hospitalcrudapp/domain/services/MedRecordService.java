@@ -1,78 +1,96 @@
 package com.hospitalcrudapp.domain.services;
+
+import com.hospitalcrudapp.dao.model.Doctor;
 import com.hospitalcrudapp.dao.model.MedRecord;
 import com.hospitalcrudapp.dao.model.Medication;
-import com.hospitalcrudapp.dao.repositories.Files.XmlMedRecordRepository;
-import com.hospitalcrudapp.dao.repositories.JDBC.JDBCMedRecordRepository;
-import com.hospitalcrudapp.dao.repositories.JDBC.JDBCPatientRepository;
-import com.hospitalcrudapp.dao.repositories.MedRecordRepository;
-import com.hospitalcrudapp.dao.repositories.MedicationRepository;
-import com.hospitalcrudapp.dao.repositories.Files.TxtPatientRepository;
-import com.hospitalcrudapp.dao.repositories.SpringJDBC.SpringMedRecordRepository;
+import com.hospitalcrudapp.dao.model.Patient;
+import com.hospitalcrudapp.dao.repositories.JPA.JPAMedRecordRepository;
 import com.hospitalcrudapp.domain.model.MedRecordUi;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
 @Service
 public class MedRecordService {
-   private final SpringMedRecordRepository medRecordRepository;
+    private final JPAMedRecordRepository medRecordRepository;
 
-    public MedRecordService(SpringMedRecordRepository medRecordRepository) {
+    public MedRecordService(JPAMedRecordRepository medRecordRepository) {
         this.medRecordRepository = medRecordRepository;
     }
 
-
-    public List<MedRecordUi> getAll(int idPatient){
-        List<MedRecord> medRecords = medRecordRepository.getAll(idPatient).stream().filter(record -> record.getIdPatient() == idPatient).toList();
+    public List<MedRecordUi> getAll(int idPatient) {
+        List<MedRecord> medRecords = medRecordRepository.getAll(idPatient);
         List<MedRecordUi> medRecordUi = new ArrayList<>();
+
         for (MedRecord medRecord : medRecords) {
-            medRecordUi.add(new MedRecordUi(medRecord.getId(),
-                    medRecord.getIdPatient(),
-                    medRecord.getIdDoctor(),
+            medRecordUi.add(new MedRecordUi(
+                    medRecord.getId(),
+                    medRecord.getPatient().getId(),
+                    medRecord.getDoctor().getDoctor_id(),
                     medRecord.getDescription(),
                     medRecord.getDate(),
                     medRecord.getMedications()
-                            .stream().filter(medication -> medication.getMedRecordId() == medRecord.getId()).map(Medication::getMedicationName)
+                            .stream()
+                            .map(Medication::getMedicationName)
                             .toList()));
         }
         return medRecordUi;
-
     }
+    public int add(MedRecordUi medRecordUi) {
 
-    public int add(MedRecordUi medRecordui) {
+        Patient patient = medRecordRepository.getPatientById(medRecordUi.getIdPatient());
+        Doctor doctor = medRecordRepository.getDoctorById(medRecordUi.getIdDoctor());
 
-        ArrayList<Medication> medications = new ArrayList<>();
-        LocalDate date= LocalDate.parse(medRecordui.getDate().toString());
+        List<Medication> medications = new ArrayList<>();
+        for (String medicationName : medRecordUi.getMedications()) {
+            Medication medication = new Medication();
+            medication.setMedicationName(medicationName);
+            medications.add(medication);
+        }
 
-        medRecordui.getMedications().forEach(medication ->
-                medications.add(new Medication(medRecordui.getIdPatient(), medication, medRecordui.getId())));
+        MedRecord medRecord = new MedRecord(
+                medRecordUi.getId(),
+                patient,
+                doctor,
+                medRecordUi.getDescription(),
+                medRecordUi.getDate(),
+                medications
+        );
 
-        MedRecord medRecord= new MedRecord(medRecordui.getId(), medRecordui.getIdPatient(), medRecordui.getIdDoctor(),
-                medRecordui.getDescription(), date,medications);
-
+        medications.forEach(medication -> medication.setMedRecord(medRecord));
         return medRecordRepository.add(medRecord);
     }
 
-    public void update(MedRecordUi medRecordui) {
 
-        ArrayList<Medication> medications = new ArrayList<>();
-        LocalDate date=LocalDate.parse(medRecordui.getDate().toString());
+    public void update(MedRecordUi medRecordUi) {
+        Patient patient = medRecordRepository.getPatientById(medRecordUi.getIdPatient());
+        Doctor doctor = medRecordRepository.getDoctorById(medRecordUi.getIdDoctor());
 
-        medRecordui.getMedications().forEach(medication ->
-                medications.add(new Medication(medRecordui.getIdPatient(), medication, medRecordui.getId())));
+        List<Medication> medications = new ArrayList<>();
+        for (String medicationName : medRecordUi.getMedications()) {
+            Medication medication = new Medication();
+            medication.setMedicationName(medicationName);
+            medications.add(medication);
+        }
 
-        MedRecord medRecord= new MedRecord(medRecordui.getId(), medRecordui.getIdPatient(), medRecordui.getIdDoctor(),
-                medRecordui.getDescription(), date,medications);
+        MedRecord medRecord = new MedRecord(
+                medRecordUi.getId(),
+                patient,
+                doctor,
+                medRecordUi.getDescription(),
+                medRecordUi.getDate(),
+                medications
+        );
 
+        medications.forEach(medication -> medication.setMedRecord(medRecord));
         medRecordRepository.update(medRecord);
     }
+
     public void delete(int id) throws Exception {
         medRecordRepository.delete(id);
-           }
-
+    }
 }

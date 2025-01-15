@@ -20,7 +20,7 @@ public class RestMedicalRecord {
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/patients/medRecords")
-    public int addMedRecord(@RequestBody MedRecordUi medRecordui) throws Exception {
+    public int addMedRecord(@RequestBody MedRecordUi medRecordui) {
         return medRecordService.add(medRecordui);
     }
 
@@ -34,7 +34,7 @@ public class RestMedicalRecord {
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PutMapping("/patients/medRecords")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMedRecord(@RequestBody MedRecordUi medRecordUi) throws Exception {
+    public void updateMedRecord(@RequestBody MedRecordUi medRecordUi) {
         medRecordService.update(medRecordUi);
     }
 }

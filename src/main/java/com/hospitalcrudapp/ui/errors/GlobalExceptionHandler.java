@@ -1,7 +1,7 @@
 package com.hospitalcrudapp.ui.errors;
 
-import com.hospitalcrudapp.dao.model.errors.DuplicatedUserError;
-import com.hospitalcrudapp.dao.model.errors.ForeignKeyConstraintError;
+import com.hospitalcrudapp.domain.errors.DuplicatedUserError;
+import com.hospitalcrudapp.domain.errors.ForeignKeyConstraintError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,9 +1,8 @@
 package com.hospitalcrudapp.dao.model;
-import com.hospitalcrudapp.dao.mappers.LocalDateAdapter;
+
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,28 +12,33 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@XmlJavaTypeAdapter(LocalDateAdapter.class)
-@XmlRootElement(name="medRecord")
-@XmlAccessorType(XmlAccessType.FIELD)
+@Entity
+@Table(name = "medical_records")
+@NamedQueries(
+        {@NamedQuery(name = "HQL_GET_ALL_MEDRECORDS",
+                query = "SELECT mr FROM MedRecord mr LEFT JOIN FETCH mr.medications WHERE mr.patient.id = :patient_id")}
+)
 public class MedRecord {
 
-    @XmlElement(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "record_id")
     private int id;
 
-    @XmlElement(name = "idPatient")
-    private int idPatient;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
-    @XmlElement(name = "doctor")
-    private int idDoctor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
-    @XmlElement(name = "diagnosis")
+    @Column(name = "diagnosis")
     private String description;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    @XmlElement(name = "date")
+    @Column(name = "admission_date")
     private LocalDate date;
-    @XmlElementWrapper(name = "medications")
-    @XmlElement(name = "medication")
+
+    @OneToMany(mappedBy = "medRecord", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Medication> medications = new ArrayList<>();
 }
-

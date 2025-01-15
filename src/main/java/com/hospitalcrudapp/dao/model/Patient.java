@@ -1,20 +1,34 @@
 package com.hospitalcrudapp.dao.model;
-import lombok.*;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Patient {
+@Entity
+@Table(name = "patients")
+@NamedQueries(
+        {@NamedQuery(name = "HQL_GET_ALL_PATIENTS",
+                query = "from Patient")}
+)
+public class Patient { //POJO
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_id")
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "date_of_birth")
     private LocalDate birthDate;
+    @Column(name = "phone")
     private String phoneNumber;
+    @OneToOne(mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Credential credentials;
-    private List<MedRecord> medRecords;
 
     public Patient(int id, String name, LocalDate birthDate, String phoneNumber, Credential credentials) {
         this.id = id;
@@ -23,12 +37,11 @@ public class Patient {
         this.phoneNumber = phoneNumber;
         this.credentials = credentials;
     }
+
     public Patient(int id, String name, LocalDate birthDate, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
-        this.medRecords = new ArrayList<>();
     }
-
 }

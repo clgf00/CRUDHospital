@@ -1,20 +1,29 @@
 package com.hospitalcrudapp.dao.model;
-import lombok.*;
 
-import javax.xml.bind.annotation.*;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@XmlRootElement(name="medRecord")
-@XmlAccessorType(XmlAccessType.FIELD)
+@Entity
+@Table(name = "prescribed_medications")
+@NamedQueries(
+        { @NamedQuery(name = "HQL_GET_ALL_MEDICATIONS",
+                query = "from Medication m WHERE m.medRecord.id = :record_id") }
+)
 public class Medication {
-    @XmlTransient
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "prescription_id")
     private int id;
-    @XmlValue
+
+    @Column(name = "medication_name")
     private String medicationName;
-    @XmlTransient
-    private int medRecordId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "record_id")
+    private MedRecord medRecord;
 }

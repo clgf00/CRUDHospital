@@ -1,8 +1,10 @@
 package com.hospitalcrudapp.ui;
+
 import com.hospitalcrudapp.domain.model.PatientUi;
 import com.hospitalcrudapp.domain.services.PatientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 @RestController
 public class RestPatient {
