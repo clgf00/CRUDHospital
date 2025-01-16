@@ -34,4 +34,9 @@ public class Credential {
         this.password = password;
         this.patientId = id;
     }
+
+    public Credential(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

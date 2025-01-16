@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "appointments")
 @NamedQueries(
-        {@NamedQuery(name = "HQL_GET_ALL_APPOINTMENTS",
-                query = "from Appointment ")}
+        {@NamedQuery(name = "HQL_GET_APPOINTMENTS",
+                query = "SELECT a FROM Appointment a WHERE a.patient.id = ?1 ")}
 )
 public class Appointment {
     @Id

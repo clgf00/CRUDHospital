@@ -83,7 +83,6 @@ public class JPAMedRecordRepository implements MedRecordRepository {
             entityManager = jpaUtil.getEntityManager();
             tx = entityManager.getTransaction();
             tx.begin();
-
             MedRecord updated = entityManager.merge(medRecord);
             tx.commit();
 

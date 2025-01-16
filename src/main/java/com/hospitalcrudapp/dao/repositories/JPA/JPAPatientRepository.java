@@ -1,16 +1,13 @@
 package com.hospitalcrudapp.dao.repositories.JPA;
 
-import com.hospitalcrudapp.dao.model.MedRecord;
 import com.hospitalcrudapp.dao.model.Patient;
 import com.hospitalcrudapp.dao.repositories.PatientRepository;
 import com.hospitalcrudapp.domain.errors.ForeignKeyConstraintError;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,27 +59,35 @@ public class JPAPatientRepository implements PatientRepository {
                 entityManager.close();
         }
 
-        return 0;
+        return patient.getId();
     }
 
     @Override
     public void update(Patient patient) {
         entityManager = jpaUtil.getEntityManager();
         EntityTransaction tx = entityManager.getTransaction();
-        tx.begin();
         try {
-            if (patient != null) {
-                entityManager.merge(patient);
-                tx.commit();
+            tx.begin();
+            Patient existingPatient = entityManager.find(Patient.class, patient.getId());
+
+            if (existingPatient != null) {
+                existingPatient.setName(patient.getName());
+                existingPatient.setBirthDate(patient.getBirthDate());
+                existingPatient.setPhoneNumber(patient.getPhoneNumber());
+                entityManager.merge(existingPatient);
             }
+
+            tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
         } finally {
-            if (entityManager != null)
+            if (entityManager != null) {
                 entityManager.close();
+            }
         }
     }
+
 
     @Override
     public void delete(int id, boolean confirm) {
@@ -91,8 +96,7 @@ public class JPAPatientRepository implements PatientRepository {
         tx.begin();
 
         try {
-            Patient patient = new Patient();
-            patient.setId(id);
+            Patient patient = entityManager.find(Patient.class, id);
             if (confirm) {
                 entityManager.createQuery("DELETE FROM Payment p WHERE p.patient.id = :patient_id")
                         .setParameter("patient_id", id)
@@ -116,7 +120,7 @@ public class JPAPatientRepository implements PatientRepository {
 
         } catch (PersistenceException e) {
             tx.rollback();
-           Logger.getLogger(JPAPatientRepository.class.getName()).log(Level.SEVERE, "", e);
+            Logger.getLogger(JPAPatientRepository.class.getName()).log(Level.SEVERE, "", e);
             throw new ForeignKeyConstraintError("El paciente tiene información asociada, ¿Eliminar?");
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();

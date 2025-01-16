@@ -1,5 +1,5 @@
 package com.hospitalcrudapp.dao.repositories;
 
 public interface PaymentRepository {
-    double getTotalPayments(int patientId);
+    double get(int patientId);
 }

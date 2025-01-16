@@ -21,7 +21,7 @@ public class Patient { //POJO
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "patient_id")
     private int id;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "date_of_birth")
     private LocalDate birthDate;

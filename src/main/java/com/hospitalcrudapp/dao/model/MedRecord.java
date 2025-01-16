@@ -39,6 +39,6 @@ public class MedRecord {
     @Column(name = "admission_date")
     private LocalDate date;
 
-    @OneToMany(mappedBy = "medRecord", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "medRecord", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Medication> medications = new ArrayList<>();
 }
