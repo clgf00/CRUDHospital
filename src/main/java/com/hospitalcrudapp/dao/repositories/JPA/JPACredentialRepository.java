@@ -35,29 +35,4 @@ public class JPACredentialRepository implements CredentialRepository {
         }
         return credential;
     }
-
-    @Override
-    public void add(Credential credential) {
-        entityManager = jpaUtil.getEntityManager();
-        EntityTransaction tx = entityManager.getTransaction();
-        try {
-            tx.begin();
-
-            if (credential.getPatient() != null) {
-                credential.setPatientId(credential.getPatient().getId());
-            }
-
-            entityManager.persist(credential);
-
-            tx.commit();
-        } catch (PersistenceException e) {
-            if (tx.isActive()) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
-        }
-    }
-
 }

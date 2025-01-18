@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
 @Getter
@@ -43,5 +42,12 @@ public class Patient { //POJO
         this.name = name;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setCredentials(Credential credentials) {
+        this.credentials = credentials;
+        if (credentials != null) {
+            credentials.setPatient(this);
+        }
     }
 }

@@ -6,5 +6,4 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CredentialRepository {
     Credential get(String username);
-    void add(Credential credential);
 }

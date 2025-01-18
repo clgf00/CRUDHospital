@@ -1,7 +1,9 @@
 package com.hospitalcrudapp.dao.repositories.JPA;
 
+import com.hospitalcrudapp.dao.model.Credential;
 import com.hospitalcrudapp.dao.model.Patient;
 import com.hospitalcrudapp.dao.repositories.PatientRepository;
+import com.hospitalcrudapp.domain.errors.DuplicatedUserError;
 import com.hospitalcrudapp.domain.errors.ForeignKeyConstraintError;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -45,12 +47,17 @@ public class JPAPatientRepository implements PatientRepository {
     public int add(Patient patient) {
         entityManager = jpaUtil.getEntityManager();
         EntityTransaction tx = entityManager.getTransaction();
-
         try {
             tx = entityManager.getTransaction();
             tx.begin();
+            Credential credential = patient.getCredentials();
+            credential.setPatient(patient);
             entityManager.persist(patient);
+            entityManager.persist(credential);
+
             tx.commit();
+        } catch (PersistenceException e) {
+            throw new DuplicatedUserError("El nombre de usuario ya existe en la base de datos");
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
@@ -58,7 +65,6 @@ public class JPAPatientRepository implements PatientRepository {
             if (entityManager != null)
                 entityManager.close();
         }
-
         return patient.getId();
     }
 
@@ -94,10 +100,15 @@ public class JPAPatientRepository implements PatientRepository {
         entityManager = jpaUtil.getEntityManager();
         EntityTransaction tx = entityManager.getTransaction();
         tx.begin();
-
         try {
             Patient patient = entityManager.find(Patient.class, id);
             if (confirm) {
+
+                entityManager.createQuery("DELETE FROM Credential c WHERE c.patient.id = :patient_id")
+                        .setParameter("patient_id", id)
+                        .executeUpdate();
+
+
                 entityManager.createQuery("DELETE FROM Payment p WHERE p.patient.id = :patient_id")
                         .setParameter("patient_id", id)
                         .executeUpdate();
@@ -113,8 +124,8 @@ public class JPAPatientRepository implements PatientRepository {
                 entityManager.createQuery("DELETE FROM MedRecord mr WHERE mr.patient.id = :patient_id")
                         .setParameter("patient_id", id)
                         .executeUpdate();
-            }
 
+            }
             entityManager.remove(entityManager.merge(patient));
             tx.commit();
 

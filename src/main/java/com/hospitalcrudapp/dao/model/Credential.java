@@ -39,4 +39,8 @@ public class Credential {
         this.username = username;
         this.password = password;
     }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 }
